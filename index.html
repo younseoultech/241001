@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Color Chip</title>
+    <style>
+
+        @font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            color: white;
+            font-family: 'Pretendard-Regular';
+        }
+
+        body {
+            background: black;
+            overscroll-behavior: none;
+            text-align: center;
+            padding: 50px;
+        }
+
+        .header {
+            color: white;
+            padding: 2em;
+            opacity: 0.75;
+        }
+
+        .header h1 {
+            color: white;
+            width: 100%;
+            text-align: left;
+            font-weight: 700;
+            font-size: 100px;
+            letter-spacing: -0.03em;
+            line-height: 0.8;
+        }
+
+        h2 {
+            color: white; 
+            font-size: 18px;
+        }
+
+        button {
+            margin: 3em 0;
+            padding: 1em 1.5em;
+            color: #fff;
+            font-size: 16px;
+            border: 1px solid white;
+            outline: none;
+            border-radius: 0.75em;
+            backdrop-filter: blur(20px);
+            cursor: pointer;
+            background: rgba(225, 225, 225, 0.2);
+            box-shadow: inset 0 0 12px white;
+        }
+
+        #colorBox {
+            width: 800px;
+            height: 300px;
+            margin: 20px auto;
+            border: 2px solid #000;
+            position: relative;
+        }
+
+        .emotion {
+            color: black;
+            position: absolute; 
+            top: 50%;
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            font-size: 20px;
+            font-weight: bold;
+            text-shadow: 0px 0px 4px rgba(225, 225, 225, 0.5);
+        }
+
+        .savedColors {
+            margin-top: 100px;
+            font-size: 18px;
+            text-align: left;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .colorItem {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+        }
+
+        .colorPreview {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>emotional color chip<br>generator</h1>
+    </div>
+
+    <div id="colorBox">
+        <div class="emotion" id="emotion"></div>
+    </div>
+    <button id="colorButton" onclick="changeColor();">나만의 컬러칩 만들기</button>
+    <button id="changeColorButton" onclick="updateColor();" style="display: none;">색상 변경</button>
+    <button id="changeEmotionButton" onclick="changeEmotion();" style="display: none;">감정 변경</button>
+    &nbsp; &nbsp;
+    <button id="saveButton" onclick="saveColor();" style="display: none;">마음에 드는 색상 저장</button>
+    
+
+    <h2>랜덤으로 제시되는 색과 감정을 조합해<br>나만의 컬러칩을 만들어 보세요.</h2>
+
+    <div class="savedColors" id="savedColors">
+        <h1>나만의 컬러칩 차트</h1>
+        <br>
+        <ul id="colorList"></ul>
+    </div>
+    <button id="resetButton" onclick="resetColors();" style="display: none;">초기화</button>
+
+    <script type="text/javascript">
+        let currentColor = ''; 
+        let currentEmotion = ''; 
+        const savedColors = [];
+
+        function changeColor() {
+            currentColor = randomColor(); 
+            currentEmotion = getEmotion(); 
+            document.getElementById('colorBox').style.background = currentColor;
+            document.getElementById('emotion').innerHTML = currentEmotion;
+
+            
+            document.getElementById('colorButton').style.display = 'none'; 
+            document.getElementById('saveButton').style.display = 'inline';
+            document.getElementById('changeColorButton').style.display = 'inline'; 
+            document.getElementById('changeEmotionButton').style.display = 'inline'; 
+            document.getElementById('resetButton').style.display = 'inline'; 
+        }
+
+        function updateColor() {
+            currentColor = randomColor(); 
+            document.getElementById('colorBox').style.background = currentColor; 
+        }
+
+        function changeEmotion() {
+            currentEmotion = getEmotion(); 
+            document.getElementById('emotion').innerHTML = currentEmotion; 
+        }
+
+        function randomColor() {
+            const r = Math.floor(Math.random() * 256);
+            const g = Math.floor(Math.random() * 256);
+            const b = Math.floor(Math.random() * 256);
+            return `rgb(${r}, ${g}, ${b})`;
+        }
+
+        function getEmotion() {
+            const emotions = [
+                "고요",
+                "열정",
+                "낯섦",
+                "편안함",
+                "두려움",
+                "에너지",
+                "복잡",
+                "단순",
+                "행복",
+                "슬픔",
+                "즐거움",
+                "설렘",
+                "순수함",
+                "놀라움",
+                "우울함",
+                "분노",
+                "짜증",
+                "공허",
+                "외로움",
+                "기쁨",
+                "예민함",
+                "귀찮음",
+                "상쾌",
+                "감동",
+                "실망",
+                "걱정",
+                "부끄러움",
+                "불안",
+                "따분함",
+                "질투",
+                "당황",
+                "순수",
+                "사랑",
+                "뿌듯함",
+                "고마움"
+
+            ];
+
+            const randomIndex = Math.floor(Math.random() * emotions.length);
+            return emotions[randomIndex];
+        }
+
+        function saveColor() {
+            if (currentColor && currentEmotion) {
+                if (savedColors.length < 10) { // 최대 10개 저장
+                    savedColors.push({ color: currentColor, emotion: currentEmotion });
+                    updateColorList();
+                    alert('컬러칩이 저장되었습니다!');
+                } else {
+                    alert('최대 10개의 컬러칩을 저장할 수 있습니다.');
+                }
+            }
+        }
+
+        function resetColors() {
+            savedColors.length = 0; // 저장된 색상 초기화
+            updateColorList();
+            alert('컬러칩 차트가 초기화되었습니다.');
+        }
+
+        function updateColorList() {
+            const colorList = document.getElementById('colorList');
+            colorList.innerHTML = ''; // 기존 목록 초기화
+            savedColors.forEach((item) => {
+                const listItem = document.createElement('li');
+                const colorPreview = document.createElement('div');
+                colorPreview.className = 'colorPreview';
+                colorPreview.style.background = item.color;
+
+                listItem.className = 'colorItem';
+                listItem.appendChild(colorPreview);
+                listItem.appendChild(document.createTextNode(`${item.emotion} - ${item.color}`));
+                colorList.appendChild(listItem);
+            });
+        }
+    </script>
+
+</body>
+</html>
